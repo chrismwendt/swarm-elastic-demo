@@ -18,7 +18,7 @@ VB_DEFAULT_MEM=512
 DOCKER_INSTALL_URL="https://get.docker.com"
 
 # You have to advertise the public interface of the VM
-BIND_INTERFACE=eth0
+BIND_INTERFACE=eth1
 
 # which Swarm version has to be installed?
 # Check the Swarm releases page on Github ()
