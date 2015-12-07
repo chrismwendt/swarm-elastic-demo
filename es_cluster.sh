@@ -10,19 +10,19 @@ DOCKER_MACHINE=/usr/local/bin/docker-machine
 # Memory constraint for the container.
 # This doesn't change anything on the JVM settings...
 # and you shouldn't use this setting in a (near) production environment
-ES_MAXMEM=128m
+ES_MAXMEM=256m
 
 AMOUNT_SWARM_NODES=4
 
 # How many es nodes should be started?
-AMOUNT_NODES=9
+AMOUNT_NODES=5
 
 # How many es shards?
-AMOUNT_SHARDS=8
+AMOUNT_SHARDS=1
 
 # How many replicas for each shard?
 # we just create many replicas to visualize them on BigDesk
-AMOUNT_REPLICAS=8
+AMOUNT_REPLICAS=1
 
 # The image to use in this test.
 # If you wan't to use a 2.x image BigDesk will not run
