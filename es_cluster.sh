@@ -111,20 +111,6 @@ do
       -d "{\"Node\": \"es-${node}\", \"Address\": \"${ES_IP}\", \"Service\": {\"ID\": \"elastic-${node}\", \"Service\": \"elastic\", \"ServiceAddress\": \"${ES_IP}\", \"Port\": 9300}}" \
       http://${CONSUL_IP}:8500/v1/catalog/register
     echo ""
-
-    if [ $node -eq 1 ]
-    then
-        echo "Installing bigdesk"
-        $DOCKER exec es-$node plugin install lukas-vlcek/bigdesk/$BIGDESK_VERSION
-        echo "Installing paramedic"
-        $DOCKER exec es-$node plugin install karmi/elasticsearch-paramedic
-    fi
 done
-
-ES1_NODE=$(docker inspect --format='{{.Node.IP}}' es-1)
-ES1_PORT=$(docker inspect --format='{{(index (index .NetworkSettings.Ports "9200/tcp") 0).HostPort}}' es-1)
-
-echo "Connect to BigDesk with:     http://$ES1_NODE:$ES1_PORT/_plugin/bigdesk/"
-echo "Connect to Paramedic with:   http://$ES1_NODE:$ES1_PORT/_plugin/paramedic/"
 
 echo "Finished"
