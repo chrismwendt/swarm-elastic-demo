@@ -105,6 +105,13 @@ do
     # may you've to change here the interface from eth0 to eth1 on boot2docker
     ES_IP=$(docker exec es-${node} ip addr | awk '/inet/ && /eth0/{sub(/\/.*$/,"",$2); print $2}')
     echo "IP of es-${node} is ${ES_IP}"
+
+    EXT_IP=$(docker inspect --format='{{.Node.IP}}' es-$node)
+    EXT_PORT=$(docker inspect --format='{{(index (index .NetworkSettings.Ports "9300/tcp") 0).HostPort}}' es-$node)
+    until nc -z $EXT_IP $EXT_PORT; do
+        echo "Sleeping for 1s since node es-$node hasn't bound port 9300 yet"
+        sleep 1
+    done
     
     echo "Registering node in Consul"
     curl -X PUT \
