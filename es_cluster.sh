@@ -10,7 +10,7 @@ DOCKER_MACHINE=/usr/local/bin/docker-machine
 # Memory constraint for the container.
 # This doesn't change anything on the JVM settings...
 # and you shouldn't use this setting in a (near) production environment
-ES_MAXMEM=512m
+ES_MAXMEM=128m
 
 AMOUNT_SWARM_NODES=4
 
