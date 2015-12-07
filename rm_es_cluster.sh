@@ -7,7 +7,7 @@ DOCKER=/usr/local/bin/docker
 DOCKER_MACHINE=/usr/local/bin/docker-machine
 
 AMOUNT_SWARM_NODES=4
-AMOUNT_NODES=9
+AMOUNT_NODES=5
 
 # set docker host coordinates correctly
 eval $($DOCKER_MACHINE env --swarm swarm-1)
@@ -16,8 +16,6 @@ eval $($DOCKER_MACHINE env --swarm swarm-1)
 echo "Retrieving Consul IP..."
 CONSUL_IP=$(docker-machine ip consul)
 echo "Consul IP is $CONSUL_IP"
-
-seq 1 $AMOUNT_SWARM_NODES | xargs -I {} -n 1 -P $AMOUNT_SWARM_NODES docker-machine ssh swarm-{} docker rmi elasticsearch-srv
 
 $DOCKER rm -f es-1 es-2 es-3 es-4 es-5 es-6 es-7 es-8 es-9
 
@@ -33,5 +31,7 @@ do
 
     echo ""
 done
+
+seq 1 $AMOUNT_SWARM_NODES | xargs -I {} -n 1 -P $AMOUNT_SWARM_NODES docker-machine ssh swarm-{} docker rmi elasticsearch-srv
 
 echo "Finished."
