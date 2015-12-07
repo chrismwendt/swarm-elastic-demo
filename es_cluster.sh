@@ -90,8 +90,7 @@ do
             --memory-swappiness=0 \
             --restart=unless-stopped \
             $ELASTIC_IMAGE \
-            /bin/bash -c "plugin install srv-discovery --url https://github.com/github/elasticsearch-srv-discovery/releases/download/${SRV_DISCOVERY_VERSION}/elasticsearch-srv-discovery-${SRV_DISCOVERY_VERSION}.zip
-            elasticsearch -Des.node.name=es-$node \
+            /bin/bash -c "elasticsearch -Des.node.name=es-$node \
                           -Des.cluster.name=$CLUSTER_NAME \
                           -Des.network.host=0.0.0.0 \
                           -Des.index.number_of_shards=$AMOUNT_SHARDS \
