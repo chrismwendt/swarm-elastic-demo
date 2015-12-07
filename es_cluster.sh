@@ -12,6 +12,8 @@ DOCKER_MACHINE=/usr/local/bin/docker-machine
 # and you shouldn't use this setting in a (near) production environment
 ES_MAXMEM=512m
 
+AMOUNT_SWARM_NODES=4
+
 # How many es nodes should be started?
 AMOUNT_NODES=9
 
@@ -24,7 +26,8 @@ AMOUNT_REPLICAS=8
 
 # The image to use in this test.
 # If you wan't to use a 2.x image BigDesk will not run
-ELASTIC_IMAGE="elasticsearch:1.7.3"
+#ELASTIC_IMAGE="elasticsearch:1.7.3"
+ELASTIC_IMAGE="elasticsearch-srv"
 
 # The BigDesk Version
 BIGDESK_VERSION=2.5.0
@@ -58,9 +61,11 @@ if [ -z "${DOCKER_HOST}" ]; then
   exit 1
 fi
 
-# pull elasticsearch image
-echo "Pulling image $ELASTIC_IMAGE"
-$DOCKER pull $ELASTIC_IMAGE
+# build elasticsearch image
+seq 1 $AMOUNT_SWARM_NODES | xargs -I {} -n 1 -P $AMOUNT_SWARM_NODES sh -c '\
+  docker-machine scp Dockerfile swarm-{}:.;\
+  docker-machine scp elasticsearch-srv-discovery.zip swarm-{}:.;\
+  docker-machine ssh swarm-{} docker build -t elasticsearch-srv .;'
 
 # getting consul IP
 echo "Retrieving Consul IP..."
