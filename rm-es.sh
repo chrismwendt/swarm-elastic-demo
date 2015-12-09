@@ -2,7 +2,7 @@
 
 . common.sh
 
-eval $(docker-machine env --swarm swarm-1)
+eval $(docker-machine env --swarm swarm-0)
 
 CONSUL_IP=$(docker-machine ip consul)
 

@@ -2,7 +2,7 @@
 
 . common.sh
 
-eval $(docker-machine env --swarm swarm-1)
+eval $(docker-machine env --swarm swarm-0)
 
 # put the elasticsearch image on each swarm node
 for i in $(seq 1 $SWARM_NODES); do
