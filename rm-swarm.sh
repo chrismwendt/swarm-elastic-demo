@@ -1,18 +1,10 @@
-#! /bin/bash
+#!/bin/bash
 
-# Clean up Docker Machine VMs
+. common.sh
 
-DOCKER_MACHINE=/usr/local/bin/docker-machine
-AMMOUNT_NODES=4
+docker-machine rm consul &
 
-echo "Removing consul"
-$DOCKER_MACHINE rm consul &
-for ((node=1; node<=$AMMOUNT_NODES; node++))
-do
-    echo "Removing node-$node now"
-    $DOCKER_MACHINE rm swarm-$node &
+for i in seq 1 $SWARM_NODES; do
+    docker-machine rm swarm-$i &
 done
 wait
-
-$DOCKER_MACHINE ls
-echo "Finished removing all VMs"
