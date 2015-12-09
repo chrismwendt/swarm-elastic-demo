@@ -5,7 +5,7 @@
 eval $(docker-machine env --swarm swarm-1)
 
 # put the elasticsearch image on each swarm node
-for i in seq 1 $SWARM_NODES; do
+for i in $(seq 1 $SWARM_NODES); do
   docker-machine scp Dockerfile swarm-$i:.
   docker-machine scp elasticsearch-srv-discovery.zip swarm-$i:.
   docker-machine ssh swarm-$i docker build -t $ELASTICSEARCH_IMAGE .
@@ -13,8 +13,7 @@ done
 
 CONSUL_IP=$(docker-machine ip consul)
 
-for ((node=1; node<=$ES_NODES; node++))
-do
+for i in $(seq 1 $ES_NODES); do
     docker run -d \
             --name "es-$node" \
             -P \

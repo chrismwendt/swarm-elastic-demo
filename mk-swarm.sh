@@ -22,7 +22,7 @@ SWARM_OPTIONS="\
 
 docker-machine create $DRIVER_DEFINITION $SWARM_OPTIONS --swarm-master swarm-1
 
-for i in seq 1 $SWARM_NODES; do
+for i in $(seq 1 $SWARM_NODES); do
     docker-machine create $DRIVER_DEFINITION $SWARM_OPTIONS swarm-$i &
 done
 wait
