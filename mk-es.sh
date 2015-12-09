@@ -5,10 +5,11 @@
 eval $(docker-machine env --swarm swarm-0)
 
 # put the elasticsearch image on each swarm node
+cat Dockerfile.tmpl | sed "s/\$ES/$ES/" > Dockerfile
 for i in $(seq 1 $SWARM_NODES); do
     docker-machine scp Dockerfile swarm-$i:.
     docker-machine scp elasticsearch-srv-discovery.zip swarm-$i:.
-    docker-machine ssh swarm-$i docker build -t $ELASTICSEARCH_IMAGE . &
+    docker-machine ssh swarm-$i docker build -t $ELASTICSEARCH_IMAGE .
 done
 wait
 
