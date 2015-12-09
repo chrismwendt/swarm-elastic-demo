@@ -1,3 +1,3 @@
-FROM elasticsearch:1.7.3
-ADD elasticsearch-srv-discovery.zip /
-RUN plugin install srv-discovery --url file:///elasticsearch-srv-discovery.zip
+FROM elasticsearch:1.5.0
+ADD elasticsearch-srv-discovery-1.5.1.zip /
+RUN plugin install srv-discovery --url file:///elasticsearch-srv-discovery-1.5.1.zip

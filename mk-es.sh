@@ -4,12 +4,17 @@
 
 eval $(docker-machine env --swarm swarm-0)
 
+cat > Dockerfile <<EOF
+FROM elasticsearch:$elasticsearch_version
+ADD elasticsearch-srv-discovery-$version.zip /
+RUN plugin install srv-discovery --url file:///elasticsearch-srv-discovery-$version.zip
+EOF
+
 # put the elasticsearch image on each swarm node
-cat Dockerfile.tmpl | sed "s/\$ES/$ES/" > Dockerfile
 for i in $(seq 1 $SWARM_NODES); do
     docker-machine scp Dockerfile swarm-$i:.
-    docker-machine scp elasticsearch-srv-discovery.zip swarm-$i:.
-    docker-machine ssh swarm-$i docker build -t $ELASTICSEARCH_IMAGE .
+    docker-machine scp elasticsearch-srv-discovery-$version.zip swarm-$i:.
+    docker-machine ssh swarm-$i docker build -t $ELASTICSEARCH_IMAGE:$version .
 done
 wait
 
@@ -23,7 +28,7 @@ for i in $(seq 1 $ES_NODES); do
         --memory=$ES_MAXMEM \
         --memory-swappiness=0 \
         --restart=unless-stopped \
-        $ELASTICSEARCH_IMAGE \
+        $ELASTICSEARCH_IMAGE:$version \
         /bin/bash -c "\
             elasticsearch \
             -Des.node.name=es-$i \
