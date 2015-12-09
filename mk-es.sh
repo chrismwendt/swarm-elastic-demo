@@ -31,7 +31,7 @@ for i in $(seq 1 $ES_NODES); do
             -Des.discovery.srv.query=elastic.service.consul \
             -Des.discovery.srv.servers=${CONSUL_IP}:${CONSUL_PORT} \
             -Des.discovery.srv.protocol=${SRV_PROTOCOL} \
-            -Des.logger.discovery=TRACE"
+            -Des.logger.discovery=$DISCOVERY_LOGLEVEL"
 
     ES_IP=$(docker exec es-$i ip addr | awk '/inet/ && /eth0/{sub(/\/.*$/,"",$2); print $2}')
     EXT_IP=$(docker inspect --format='{{.Node.IP}}' es-$i)
