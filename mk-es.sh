@@ -8,8 +8,9 @@ eval $(docker-machine env --swarm swarm-0)
 for i in $(seq 1 $SWARM_NODES); do
     docker-machine scp Dockerfile swarm-$i:.
     docker-machine scp elasticsearch-srv-discovery.zip swarm-$i:.
-    docker-machine ssh swarm-$i docker build -t $ELASTICSEARCH_IMAGE .
+    docker-machine ssh swarm-$i docker build -t $ELASTICSEARCH_IMAGE . &
 done
+wait
 
 CONSUL_IP=$(docker-machine ip consul)
 
@@ -37,10 +38,12 @@ for i in $(seq 1 $ES_NODES); do
     EXT_IP=$(docker inspect --format='{{.Node.IP}}' es-$i)
     EXT_PORT=$(docker inspect --format='{{(index (index .NetworkSettings.Ports "9300/tcp") 0).HostPort}}' es-$i)
 
-    until nc -z $EXT_IP $EXT_PORT; do
-        echo "Sleeping for 1s since node es-$i hasn't bound port 9300 yet"
-        sleep 1
-    done
+    if [ $i -eq 1 ]; then
+        until nc -z $EXT_IP $EXT_PORT; do
+            echo "Sleeping for 1s since node es-$i hasn't bound port 9300 yet"
+            sleep 1
+        done
+    fi
 
     curl -X PUT \
       -d "{\"Node\": \"es-$i\", \"Address\": \"${ES_IP}\", \"Service\": {\"ID\": \"elastic-$i\", \"Service\": \"elastic\", \"ServiceAddress\": \"${ES_IP}\", \"Port\": 9300}}" \
